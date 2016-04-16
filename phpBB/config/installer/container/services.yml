@@ -12,7 +12,7 @@ services:
     cache.driver:
         class: '%cache.driver.class%'
         arguments:
-            - '%core.cache_dir%'
+            - '%core.root_path%/cache/installer/'
 
     config:
         class: phpbb\config\config

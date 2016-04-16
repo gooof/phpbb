@@ -155,13 +155,13 @@ class bbcode
 					$phpbb_container->get('filesystem'),
 					$phpbb_container->get('path_helper'),
 					$phpbb_container,
-					$phpbb_container->getParameter('core.cache_dir'),
+					$phpbb_container->getParameter('core.root_path') . 'cache/',
 					$phpbb_container->get('ext.manager'),
 					new \phpbb\template\twig\loader(
 						$phpbb_filesystem
 					)
 				),
-				$phpbb_container->getParameter('core.cache_dir'),
+				$phpbb_container->getParameter('core.root_path') . 'cache/',
 				$phpbb_container->get('user'),
 				$phpbb_container->get('template.twig.extensions.collection'),
 				$phpbb_extension_manager
@@ -219,7 +219,7 @@ class bbcode
 		{
 			switch ($bbcode_id)
 			{
-				case BBCODE_ID_QUOTE:
+				case 0:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'str' => array(
 							'[/quote:$uid]'	=> $this->bbcode_tpl('quote_close', $bbcode_id)
@@ -232,7 +232,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_B:
+				case 1:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'str' => array(
 							'[b:$uid]'	=> $this->bbcode_tpl('b_open', $bbcode_id),
@@ -241,7 +241,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_I:
+				case 2:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'str' => array(
 							'[i:$uid]'	=> $this->bbcode_tpl('i_open', $bbcode_id),
@@ -250,7 +250,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_URL:
+				case 3:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'preg' => array(
 							'#\[url:$uid\]((.*?))\[/url:$uid\]#s'			=> $this->bbcode_tpl('url', $bbcode_id),
@@ -259,7 +259,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_IMG:
+				case 4:
 					if ($user->optionget('viewimg'))
 					{
 						$this->bbcode_cache[$bbcode_id] = array(
@@ -278,7 +278,7 @@ class bbcode
 					}
 				break;
 
-				case BBCODE_ID_SIZE:
+				case 5:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'preg' => array(
 							'#\[size=([\-\+]?\d+):$uid\](.*?)\[/size:$uid\]#s'	=> $this->bbcode_tpl('size', $bbcode_id),
@@ -286,7 +286,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_COLOR:
+				case 6:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'preg' => array(
 							'!\[color=(#[0-9a-f]{3}|#[0-9a-f]{6}|[a-z\-]+):$uid\](.*?)\[/color:$uid\]!is'	=> $this->bbcode_tpl('color', $bbcode_id),
@@ -294,7 +294,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_U:
+				case 7:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'str' => array(
 							'[u:$uid]'	=> $this->bbcode_tpl('u_open', $bbcode_id),
@@ -303,7 +303,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_CODE:
+				case 8:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'preg' => array(
 							'#\[code(?:=([a-z]+))?:$uid\](.*?)\[/code:$uid\]#is'	=> function ($match) {
@@ -313,7 +313,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_LIST:
+				case 9:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'preg' => array(
 							'#(\[\/?(list|\*):[mou]?:?$uid\])[\n]{1}#'	=> "\$1",
@@ -333,7 +333,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_EMAIL:
+				case 10:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'preg' => array(
 							'#\[email:$uid\]((.*?))\[/email:$uid\]#is'			=> $this->bbcode_tpl('email', $bbcode_id),
@@ -342,7 +342,7 @@ class bbcode
 					);
 				break;
 
-				case BBCODE_ID_FLASH:
+				case 11:
 					if ($user->optionget('viewflash'))
 					{
 						$this->bbcode_cache[$bbcode_id] = array(
@@ -361,7 +361,7 @@ class bbcode
 					}
 				break;
 
-				case BBCODE_ID_ATTACH:
+				case 12:
 					$this->bbcode_cache[$bbcode_id] = array(
 						'str'	=> array(
 							'[/attachment:$uid]'	=> $this->bbcode_tpl('inline_attachment_close', $bbcode_id)

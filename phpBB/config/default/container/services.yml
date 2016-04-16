@@ -161,7 +161,7 @@ services:
 
     version_helper:
         class: phpbb\version_helper
-        shared: false
+        scope: prototype
         arguments:
             - '@cache'
             - '@config'

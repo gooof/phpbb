@@ -469,7 +469,7 @@ function decode_message(&$message, $bbcode_uid = '')
 		$message = str_replace($match, $replace, $message);
 
 		$match = get_preg_expression('bbcode_htm');
-		$replace = array('\1', '\1', '\2', '\2', '\1', '', '');
+		$replace = array('\1', '\1', '\3', '\1', '', '');
 
 		$message = preg_replace($match, $replace, $message);
 	}
@@ -1091,8 +1091,17 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 		unset($new_attachment_data);
 	}
 
-	// Make sure attachments are properly ordered
-	ksort($attachments);
+	// Sort correctly
+	if ($config['display_order'])
+	{
+		// Ascending sort
+		krsort($attachments);
+	}
+	else
+	{
+		// Descending sort
+		ksort($attachments);
+	}
 
 	foreach ($attachments as $attachment)
 	{
@@ -1300,6 +1309,8 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 	$attachments = $compiled_attachments;
 	unset($compiled_attachments);
 
+	$tpl_size = sizeof($attachments);
+
 	$unset_tpl = array();
 
 	preg_match_all('#<!\-\- ia([0-9]+) \-\->(.*?)<!\-\- ia\1 \-\->#', $message, $matches, PREG_PATTERN_ORDER);
@@ -1307,7 +1318,8 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 	$replace = array();
 	foreach ($matches[0] as $num => $capture)
 	{
-		$index = $matches[1][$num];
+		// Flip index if we are displaying the reverse way
+		$index = ($config['display_order']) ? ($tpl_size-($matches[1][$num] + 1)) : $matches[1][$num];
 
 		$replace['from'][] = $matches[0][$num];
 		$replace['to'][] = (isset($attachments[$index])) ? $attachments[$index] : sprintf($user->lang['MISSING_INLINE_ATTACHMENT'], $matches[2][array_search($index, $matches[1])]);
@@ -1321,18 +1333,6 @@ function parse_attachments($forum_id, &$message, &$attachments, &$update_count_a
 	}
 
 	$unset_tpl = array_unique($unset_tpl);
-
-	// Sort correctly
-	if ($config['display_order'])
-	{
-		// Ascending sort
-		krsort($attachments);
-	}
-	else
-	{
-		// Descending sort
-		ksort($attachments);
-	}
 
 	// Needed to let not display the inlined attachments at the end of the post again
 	foreach ($unset_tpl as $index)

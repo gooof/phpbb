@@ -544,10 +544,7 @@ class ucp_profile
 				// Replace "error" strings with their real, localised form
 				$error = array_map(array($user, 'lang'), $error);
 
-				if ($request->is_set_post('preview'))
-				{
-					$decoded_message = generate_text_for_edit($signature, $bbcode_uid, $bbcode_flags);
-				}
+				$decoded_message = generate_text_for_edit($signature, $bbcode_uid, $bbcode_bitfield);
 
 				/** @var \phpbb\controller\helper $controller_helper */
 				$controller_helper = $phpbb_container->get('controller.helper');
@@ -663,13 +660,6 @@ class ucp_profile
 					}
 
 					$selected_driver = $phpbb_avatar_manager->clean_driver_name($request->variable('avatar_driver', $user->data['user_avatar_type']));
-
-					$template->assign_vars(array(
-						'AVATAR_MIN_WIDTH'	=> $config['avatar_min_width'],
-						'AVATAR_MAX_WIDTH'	=> $config['avatar_max_width'],
-						'AVATAR_MIN_HEIGHT'	=> $config['avatar_min_height'],
-						'AVATAR_MAX_HEIGHT'	=> $config['avatar_max_height'],
-					));
 
 					foreach ($avatar_drivers as $current_driver)
 					{

@@ -37,5 +37,5 @@ then
 fi
 
 cd phpBB
-php ../composer.phar install --dev --no-interaction
+php ../composer.phar install --dev --no-interaction --prefer-source
 cd ..

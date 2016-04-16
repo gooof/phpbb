@@ -1838,11 +1838,11 @@ class acp_users
 			case 'avatar':
 
 				$avatars_enabled = false;
-				/** @var \phpbb\avatar\manager $phpbb_avatar_manager */
-				$phpbb_avatar_manager = $phpbb_container->get('avatar.manager');
 
 				if ($config['allow_avatar'])
 				{
+					/* @var $phpbb_avatar_manager \phpbb\avatar\manager */
+					$phpbb_avatar_manager = $phpbb_container->get('avatar.manager');
 					$avatar_drivers = $phpbb_avatar_manager->get_enabled_drivers();
 
 					// This is normalised data, without the user_ prefix
@@ -1902,14 +1902,6 @@ class acp_users
 					}
 
 					$selected_driver = $phpbb_avatar_manager->clean_driver_name($request->variable('avatar_driver', $user_row['user_avatar_type']));
-
-					// Assign min and max values before generating avatar driver html
-					$template->assign_vars(array(
-						'AVATAR_MIN_WIDTH'		=> $config['avatar_min_width'],
-						'AVATAR_MAX_WIDTH'		=> $config['avatar_max_width'],
-						'AVATAR_MIN_HEIGHT'		=> $config['avatar_min_height'],
-						'AVATAR_MAX_HEIGHT'		=> $config['avatar_max_height'],
-					));
 
 					foreach ($avatar_drivers as $current_driver)
 					{
@@ -2081,10 +2073,7 @@ class acp_users
 				// Replace "error" strings with their real, localised form
 				$error = array_map(array($user, 'lang'), $error);
 
-				if ($request->is_set_post('preview'))
-				{
-					$decoded_message = generate_text_for_edit($signature, $bbcode_uid, $bbcode_bitfield);
-				}
+				$decoded_message = generate_text_for_edit($signature, $bbcode_uid, $bbcode_bitfield);
 
 				/** @var \phpbb\controller\helper $controller_helper */
 				$controller_helper = $phpbb_container->get('controller.helper');

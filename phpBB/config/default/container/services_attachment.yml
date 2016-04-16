@@ -1,7 +1,7 @@
 services:
     attachment.delete:
         class: phpbb\attachment\delete
-        shared: false
+        scope: prototype
         arguments:
             - '@config'
             - '@dbal.conn'
@@ -12,7 +12,7 @@ services:
 
     attachment.manager:
         class: phpbb\attachment\manager
-        shared: false
+        scope: prototype
         arguments:
             - '@attachment.delete'
             - '@attachment.resync'
@@ -20,13 +20,13 @@ services:
 
     attachment.resync:
         class: phpbb\attachment\resync
-        shared: false
+        scope: prototype
         arguments:
             - '@dbal.conn'
 
     attachment.upload:
         class: phpbb\attachment\upload
-        shared: false
+        scope: prototype
         arguments:
             - '@auth'
             - '@cache'

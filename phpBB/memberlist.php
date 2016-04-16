@@ -1279,8 +1279,7 @@ switch ($mode)
 			}
 
 			$param = call_user_func_array(array($request, 'variable'), $call);
-			// Encode strings, convert everything else to int in order to prevent empty parameters.
-			$param = urlencode($key) . '=' . ((is_string($param)) ? urlencode($param) : (int) $param);
+			$param = urlencode($key) . '=' . ((is_string($param)) ? urlencode($param) : $param);
 			$params[] = $param;
 
 			if ($key != 'first_char')

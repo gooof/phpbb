@@ -209,11 +209,10 @@ class phpbb_functional_test_case extends phpbb_test_case
 	{
 		if (!$this->cache)
 		{
-			global $phpbb_container, $phpbb_root_path;
+			global $phpbb_container;
 
 			$phpbb_container = new phpbb_mock_container_builder();
 			$phpbb_container->setParameter('core.environment', PHPBB_ENVIRONMENT);
-			$phpbb_container->setParameter('core.cache_dir', $phpbb_root_path . 'cache/' . PHPBB_ENVIRONMENT . '/');
 
 			$this->cache = new \phpbb\cache\driver\file;
 		}

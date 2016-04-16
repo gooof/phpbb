@@ -49,11 +49,25 @@ class router implements RouterInterface
 	protected $loader;
 
 	/**
+	 * phpBB root path
+	 *
+	 * @var string
+	 */
+	protected $phpbb_root_path;
+
+	/**
 	 * PHP file extensions
 	 *
 	 * @var string
 	 */
 	protected $php_ext;
+
+	/**
+	 * Name of the current environment
+	 *
+	 * @var string
+	 */
+	protected $environment;
 
 	/**
 	 * @var \Symfony\Component\Routing\Matcher\UrlMatcherInterface|null
@@ -76,27 +90,24 @@ class router implements RouterInterface
 	protected $route_collection;
 
 	/**
-	 * @var string
-	 */
-	protected $cache_dir;
-
-	/**
 	 * Construct method
 	 *
 	 * @param ContainerInterface			$container			DI container
 	 * @param resources_locator_interface	$resources_locator	Resources locator
 	 * @param LoaderInterface				$loader				Resources loader
+	 * @param string						$phpbb_root_path	phpBB root path
 	 * @param string						$php_ext			PHP file extension
-	 * @param string						$cache_dir			phpBB cache directory
+	 * @param string						$environment		Name of the current environment
 	 */
-	public function __construct(ContainerInterface $container, resources_locator_interface $resources_locator, LoaderInterface $loader, $php_ext, $cache_dir)
+	public function __construct(ContainerInterface $container, resources_locator_interface $resources_locator, LoaderInterface $loader, $phpbb_root_path, $php_ext, $environment)
 	{
 		$this->container			= $container;
 		$this->resources_locator	= $resources_locator;
 		$this->loader				= $loader;
+		$this->phpbb_root_path		= $phpbb_root_path;
 		$this->php_ext				= $php_ext;
+		$this->environment			= $environment;
 		$this->context				= new RequestContext();
-		$this->cache_dir			= $cache_dir;
 	}
 
 	/**
@@ -200,7 +211,7 @@ class router implements RouterInterface
 	{
 		try
 		{
-			$cache = new ConfigCache("{$this->cache_dir}url_matcher.{$this->php_ext}", defined('DEBUG'));
+			$cache = new ConfigCache("{$this->phpbb_root_path}cache/{$this->environment}/url_matcher.{$this->php_ext}", defined('DEBUG'));
 			if (!$cache->isFresh())
 			{
 				$dumper = new PhpMatcherDumper($this->get_routes());
@@ -255,7 +266,7 @@ class router implements RouterInterface
 	{
 		try
 		{
-			$cache = new ConfigCache("{$this->cache_dir}url_generator.{$this->php_ext}", defined('DEBUG'));
+			$cache = new ConfigCache("{$this->phpbb_root_path}cache/{$this->environment}/url_generator.{$this->php_ext}", defined('DEBUG'));
 			if (!$cache->isFresh())
 			{
 				$dumper = new PhpGeneratorDumper($this->get_routes());
